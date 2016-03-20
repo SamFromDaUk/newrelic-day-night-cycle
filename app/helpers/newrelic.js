@@ -1,24 +1,35 @@
 import request from 'request-promise';
 
 module.exports = {
-  getApplications: function *() {
+  getApplications: function *(api_key) {
     let options = {
         method: 'GET',
         uri: process.env.NEW_RELIC_URL + 'applications.json',
         headers: {
-            'X-Api-Key': process.env.NEW_RELIC_API_KEY
+          'X-Api-Key': api_key
         },
         json: true
     };
 
     let response = yield request(options);
 
-    return response.applications.filter(app => {
-      return app.name.indexOf('-prod') !== -1;
-    });
+    return response.applications;
   },
 
-  updateApplicationPolicy: function *(policy, apps) {
+  getPolicies: function *(api_key) {
+    let options = {
+      method: 'GET',
+      uri: process.env.NEW_RELIC_URL + 'alert_policies.json',
+      headers: {
+        'X-Api-Key': api_key
+      },
+      json: true
+    };
+
+    return yield request(options);
+  },
+
+  updateApplicationPolicy: function *(api_key, policy, apps) {
     let options = {
       method: 'PUT',
       uri: process.env.NEW_RELIC_URL + `alert_policies/${policy}.json`,
@@ -32,7 +43,7 @@ module.exports = {
         }
       },
       headers: {
-          'X-Api-Key': process.env.NEW_RELIC_API_KEY
+          'X-Api-Key': api_key
       },
       json: true
     };
