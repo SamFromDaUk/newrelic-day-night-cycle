@@ -48,8 +48,6 @@ module.exports = {
       json: true
     };
 
-    let response = yield request(options);
-
-    console.log(JSON.stringify(response));
+    return yield request(options);
   }
 };

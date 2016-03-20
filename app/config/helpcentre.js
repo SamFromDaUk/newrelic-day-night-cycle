@@ -1,6 +1,6 @@
 module.exports = {
   NAME: 'helpcentre',
-  API_KEY: '6d4accd0189f09514db1d54a5ed59f831ee2a105fb21a36',
+  API_KEY: process.env.HELPCENTRE_API_KEY,
   GOLD_DAY: 442015,
   GOLD_NIGHT: 493279,
   SILVER_DAY: 441640,
