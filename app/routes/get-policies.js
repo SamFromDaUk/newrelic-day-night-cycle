@@ -1,27 +1,19 @@
 import newrelic from '../helpers/newrelic.js';
-import config from '../config';
 
 module.exports = function *() {
-  for (var i = 0; i < config.length; i++) {
-    var policies = yield newrelic.getPolicies(config[i].API_KEY);
+  let policies = yield newrelic.getPolicies(this.query['api-key']);
 
-    config[i].policies = policies.alert_policies
-      .filter(policy => {
-        return policy.enabled;
-      })
-      .map(policy => {
-        return {
-          id: policy.id,
-          name: policy.name,
-          enabled: policy.enabled
-        };
-      });
-  }
+  let response = policies.alert_policies
+    .filter(policy => {
+      return policy.enabled;
+    })
+    .map(policy => {
+      return {
+        id: policy.id,
+        name: policy.name,
+        enabled: policy.enabled
+      };
+    });
 
-  this.body = JSON.stringify(config.map(team => {
-    return {
-      name: team.NAME,
-      policies: team.policies
-    };
-  }), null, 2);
+  this.body = JSON.stringify(response, null, 2);
 };
